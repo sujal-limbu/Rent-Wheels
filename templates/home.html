@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}RentWheels Nepal - Rent a Vehicle{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1>Rent Any Vehicle <span>Anywhere</span> in Nepal</h1>
+                <p>Find cars, bikes, scooters and more from trusted owners around you. Easy booking, secure payment.</p>
+                <a href="/vehicles/" class="btn btn-warning btn-lg fw-bold px-4">
+                    <i class="bi bi-search"></i> Browse Vehicles
+                </a>
+                {% if not user.is_authenticated %}
+                <a href="/accounts/register/" class="btn btn-outline-light btn-lg px-4 ms-2">
+                    Get Started Free
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- SEARCH BOX -->
+            <div class="col-lg-5 offset-lg-1">
+                <div class="search-box">
+                    <h5><i class="bi bi-search"></i> Quick Search</h5>
+                    <form method="GET" action="/vehicles/">
+                        <div class="mb-3">
+                            <select name="type" class="form-select">
+                                <option value="">All Vehicle Types</option>
+                                <option value="car">🚗 Car</option>
+                                <option value="bike">🏍️ Bike</option>
+                                <option value="scooter">🛵 Scooter</option>
+                                <option value="van">🚐 Van</option>
+                                <option value="truck">🚚 Truck</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" name="location" class="form-control"
+                                   placeholder="📍 Location (e.g. Thamel, Pokhara)">
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="number" name="min_price" class="form-control"
+                                       placeholder="Min Price (Rs)">
+                            </div>
+                            <div class="col">
+                                <input type="number" name="max_price" class="form-control"
+                                       placeholder="Max Price (Rs)">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-search">
+                            <i class="bi bi-search"></i> Search Vehicles
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 stat-item">
+                <h3>500+</h3><p>Vehicles Listed</p>
+            </div>
+            <div class="col-md-3 stat-item">
+                <h3>2000+</h3><p>Happy Renters</p>
+            </div>
+            <div class="col-md-3 stat-item">
+                <h3>25+</h3><p>Cities Covered</p>
+            </div>
+            <div class="col-md-3 stat-item">
+                <h3>4.8★</h3><p>Average Rating</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURED VEHICLES -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="section-title">Featured Vehicles</h2>
+                <p class="text-muted">Handpicked vehicles for you</p>
+            </div>
+            <a href="/vehicles/" class="btn btn-outline-primary">View All →</a>
+        </div>
+
+        <div class="row g-4">
+            {% for vehicle in featured_vehicles %}
+            <div class="col-md-4">
+                <div class="vehicle-card card h-100">
+                    {% if vehicle.images.first %}
+                    <img src="{{ vehicle.images.first.image.url }}" alt="{{ vehicle.title }}">
+                    {% else %}
+                    <img src="{% static 'images/default-vehicle.jpg' %}" alt="No Image">
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">{{ vehicle.title }}</h5>
+                            <span class="price-tag">Rs {{ vehicle.price_per_day }}/day</span>
+                        </div>
+                        <div class="vehicle-meta mb-2">
+                            <span><i class="bi bi-geo-alt"></i> {{ vehicle.location }}</span>
+                            <span><i class="bi bi-people"></i> {{ vehicle.seats }} seats</span>
+                            <span><i class="bi bi-fuel-pump"></i> {{ vehicle.fuel_type }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-warning">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= vehicle.average_rating %}⭐{% endif %}
+                                {% endfor %}
+                                ({{ vehicle.average_rating }})
+                            </span>
+                            {% if vehicle.is_available %}
+                            <span class="badge bg-success availability-badge">Available</span>
+                            {% else %}
+                            <span class="badge bg-danger availability-badge">Unavailable</span>
+                            {% endif %}
+                        </div>
+                        <a href="/vehicles/{{ vehicle.id }}/" class="btn-rent btn">
+                            View & Book
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-car-front" style="font-size:4rem; color:#cbd5e1;"></i>
+                <p class="text-muted mt-3">No vehicles listed yet. <a href="/vehicles/add/">Be the first to list one!</a></p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title mx-auto" style="display:inline-block;">How It Works</h2>
+            <p class="text-muted mt-2">Rent a vehicle in 4 simple steps</p>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-icon">🔍</div>
+                    <h5>Search</h5>
+                    <p class="text-muted">Browse available vehicles by type, location and price</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-icon">📅</div>
+                    <h5>Book</h5>
+                    <p class="text-muted">Select your rental dates and confirm your booking</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-icon">💳</div>
+                    <h5>Pay via eSewa</h5>
+                    <p class="text-muted">Secure and instant payment through eSewa</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-icon">🚗</div>
+                    <h5>Ride!</h5>
+                    <p class="text-muted">Pick up your vehicle and enjoy the journey</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

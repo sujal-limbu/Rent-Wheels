@@ -1,0 +1,348 @@
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --secondary: #f59e0b;
+    --dark: #0f172a;
+    --light: #f8fafc;
+    --gray: #64748b;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--light);
+    color: var(--dark);
+}
+
+/* NAVBAR */
+.navbar {
+    background: var(--dark) !important;
+    padding: 1rem 0;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+.navbar-brand {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--secondary) !important;
+    letter-spacing: 1px;
+}
+
+.navbar-brand span {
+    color: white;
+}
+
+.nav-link {
+    color: #cbd5e1 !important;
+    font-weight: 500;
+    margin: 0 5px;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--secondary) !important;
+}
+
+.btn-nav-login {
+    background: var(--primary);
+    color: white !important;
+    border-radius: 8px;
+    padding: 6px 20px !important;
+}
+
+.btn-nav-login:hover {
+    background: var(--primary-dark);
+}
+
+.notification-badge {
+    position: relative;
+}
+
+.notification-badge .badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    font-size: 0.6rem;
+}
+
+/* HERO SECTION */
+.hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #2563eb 100%);
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: rgba(37, 99, 235, 0.15);
+    border-radius: 50%;
+    top: -100px;
+    right: -100px;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: white;
+    line-height: 1.2;
+}
+
+.hero h1 span {
+    color: var(--secondary);
+}
+
+.hero p {
+    color: #94a3b8;
+    font-size: 1.2rem;
+    margin: 1.5rem 0;
+}
+
+/* SEARCH BOX */
+.search-box {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    margin-top: 2rem;
+}
+
+.search-box h5 {
+    color: var(--dark);
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+}
+
+.search-box .form-control,
+.search-box .form-select {
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+}
+
+.search-box .form-control:focus,
+.search-box .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: none;
+}
+
+.btn-search {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-weight: 600;
+    width: 100%;
+    transition: background 0.3s;
+}
+
+.btn-search:hover {
+    background: var(--primary-dark);
+    color: white;
+}
+
+/* STATS BAR */
+.stats-bar {
+    background: var(--secondary);
+    padding: 1.2rem 0;
+}
+
+.stat-item {
+    text-align: center;
+    color: var(--dark);
+}
+
+.stat-item h3 {
+    font-size: 2rem;
+    font-weight: 900;
+}
+
+.stat-item p {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* SECTION TITLES */
+.section-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--dark);
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--primary);
+    border-radius: 2px;
+    margin-top: 8px;
+}
+
+/* VEHICLE CARD */
+.vehicle-card {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: white;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+.vehicle-card img {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.vehicle-card .card-body {
+    padding: 1.3rem;
+}
+
+.vehicle-card .card-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--dark);
+}
+
+.price-tag {
+    background: var(--primary);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.availability-badge {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.vehicle-meta span {
+    font-size: 0.82rem;
+    color: var(--gray);
+    margin-right: 10px;
+}
+
+.btn-rent {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-weight: 600;
+    width: 100%;
+    transition: background 0.3s;
+}
+
+.btn-rent:hover {
+    background: var(--primary-dark);
+    color: white;
+}
+
+/* HOW IT WORKS */
+.how-it-works {
+    background: #f1f5f9;
+    padding: 5rem 0;
+}
+
+.step-card {
+    text-align: center;
+    padding: 2rem;
+}
+
+.step-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.2rem;
+    font-size: 2rem;
+    color: white;
+}
+
+/* FOOTER */
+footer {
+    background: var(--dark);
+    color: #94a3b8;
+    padding: 3rem 0 1rem;
+}
+
+footer h5 {
+    color: white;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+footer a {
+    color: #94a3b8;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 6px;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: var(--secondary);
+}
+
+.footer-bottom {
+    border-top: 1px solid #1e293b;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+/* ALERTS */
+.alert {
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+/* FORMS */
+.auth-card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    padding: 2.5rem;
+}
+
+.auth-card h2 {
+    font-weight: 800;
+    color: var(--dark);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .hero h1 { font-size: 2.2rem; }
+    .hero { min-height: 70vh; }
+}
