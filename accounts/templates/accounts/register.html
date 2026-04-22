@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - RentWheels</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem 0;
+    }
+    .form-container {
+      width: 380px;
+      border-radius: 0.75rem;
+      background-color: rgba(17, 24, 39, 1);
+      padding: 2rem;
+      color: rgba(243, 244, 246, 1);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+    .title {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: rgba(156, 163, 175, 1);
+      margin-top: 4px;
+      margin-bottom: 0.5rem;
+    }
+    .input-group {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+    }
+    .input-group label {
+      display: block;
+      color: rgba(156, 163, 175, 1);
+      margin-bottom: 4px;
+    }
+    .input-group input {
+      width: 100%;
+      border-radius: 0.375rem;
+      border: 1px solid rgba(55, 65, 81, 1);
+      outline: 0;
+      background-color: rgba(17, 24, 39, 1);
+      padding: 0.75rem 1rem;
+      color: rgba(243, 244, 246, 1);
+      transition: border-color 0.2s;
+    }
+    .input-group input:focus {
+      border-color: rgba(167, 139, 250, 1);
+    }
+    .row-inputs {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .row-inputs .input-group { flex: 1; }
+    .sign {
+      display: block;
+      width: 100%;
+      background-color: rgba(167, 139, 250, 1);
+      padding: 0.75rem;
+      text-align: center;
+      color: rgba(17, 24, 39, 1);
+      border: none;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      margin-top: 1.2rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      font-size: 1rem;
+    }
+    .sign:hover { opacity: 0.9; }
+    .signup {
+      text-align: center;
+      font-size: 0.78rem;
+      color: rgba(156, 163, 175, 1);
+      margin-top: 1rem;
+    }
+    .signup a {
+      color: rgba(167, 139, 250, 1);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .signup a:hover { text-decoration: underline; }
+    .error-msg {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      margin-top: 1rem;
+    }
+    .success-msg {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <p class="title">🚗 Join RentWheels</p>
+    <p class="subtitle">Create your free account today</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="{% if message.tags == 'success' %}success-msg{% else %}error-msg{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" placeholder="Choose a username" required>
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" placeholder="your@email.com" required>
+      </div>
+
+      <div class="input-group">
+        <label for="phone">Phone Number</label>
+        <input type="text" name="phone" id="phone" placeholder="+977-98XXXXXXXX">
+      </div>
+
+      <div class="row-inputs">
+        <div class="input-group">
+          <label for="password1">Password</label>
+          <input type="password" name="password1" id="password1" placeholder="Create password" required>
+        </div>
+        <div class="input-group">
+          <label for="password2">Confirm</label>
+          <input type="password" name="password2" id="password2" placeholder="Repeat it" required>
+        </div>
+      </div>
+
+      <button type="submit" class="sign">Create Account</button>
+    </form>
+
+    <p class="signup">Already have an account? <a href="/accounts/login/">Sign in</a></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - RentWheels{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+
+        <!-- LEFT: Profile Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+                {% if profile.profile_pic %}
+                <img src="{{ profile.profile_pic.url }}" class="rounded-circle mb-3"
+                     style="width:120px;height:120px;object-fit:cover;">
+                {% else %}
+                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3"
+                     style="width:120px;height:120px;font-size:3rem;">
+                    {{ user.username|first|upper }}
+                </div>
+                {% endif %}
+                <h4 class="fw-bold">{{ user.get_full_name|default:user.username }}</h4>
+                <p class="text-muted">{{ user.email }}</p>
+                {% if profile.is_verified %}
+                <span class="badge bg-success">✓ Verified Member</span>
+                {% else %}
+                <span class="badge bg-warning text-dark">Unverified</span>
+                {% endif %}
+
+                <hr>
+
+                <div class="text-start">
+                    <p><i class="bi bi-phone"></i> {{ profile.phone|default:"Not provided" }}</p>
+                    <p><i class="bi bi-geo-alt"></i> {{ profile.address|default:"Not provided" }}</p>
+                    <p><i class="bi bi-card-text"></i> License: {{ profile.license_no|default:"Not provided" }}</p>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="card border-0 shadow-sm rounded-4 p-3 mt-3">
+                <a href="/bookings/my/" class="btn btn-outline-primary mb-2">
+                    <i class="bi bi-calendar-check"></i> My Bookings
+                </a>
+                <a href="/vehicles/?owner=me" class="btn btn-outline-secondary mb-2">
+                    <i class="bi bi-car-front"></i> My Listed Vehicles
+                </a>
+                <a href="/notifications/" class="btn btn-outline-info">
+                    <i class="bi bi-bell"></i> Notifications
+                </a>
+            </div>
+        </div>
+
+        <!-- RIGHT: Edit Form -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h4 class="fw-bold mb-4"><i class="bi bi-pencil"></i> Edit Profile</h4>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label fw-semibold">First Name</label>
+                            <input type="text" name="first_name" class="form-control"
+                                   value="{{ user.first_name }}">
+                        </div>
+                        <div class="col">
+                            <label class="form-label fw-semibold">Last Name</label>
+                            <input type="text" name="last_name" class="form-control"
+                                   value="{{ user.last_name }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email</label>
+                        <input type="email" name="email" class="form-control"
+                               value="{{ user.email }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Phone</label>
+                        <input type="text" name="phone" class="form-control"
+                               value="{{ profile.phone }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Address</label>
+                        <textarea name="address" class="form-control" rows="2">{{ profile.address }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Driving License No.</label>
+                        <input type="text" name="license_no" class="form-control"
+                               value="{{ profile.license_no }}">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Profile Picture</label>
+                        <input type="file" name="profile_pic" class="form-control" accept="image/*">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary px-5 fw-bold">
+                        <i class="bi bi-save"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
