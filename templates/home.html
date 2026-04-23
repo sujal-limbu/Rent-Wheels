@@ -21,66 +21,9 @@
                 </a>
                 {% endif %}
             </div>
-
-            <!-- SEARCH BOX -->
-            <div class="col-lg-5 offset-lg-1">
-                <div class="search-box">
-                    <h5><i class="bi bi-search"></i> Quick Search</h5>
-                    <form method="GET" action="/vehicles/">
-                        <div class="mb-3">
-                            <select name="type" class="form-select">
-                                <option value="">All Vehicle Types</option>
-                                <option value="car">🚗 Car</option>
-                                <option value="bike">🏍️ Bike</option>
-                                <option value="scooter">🛵 Scooter</option>
-                                <option value="van">🚐 Van</option>
-                                <option value="truck">🚚 Truck</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <input type="text" name="location" class="form-control"
-                                   placeholder="📍 Location (e.g. Thamel, Pokhara)">
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <input type="number" name="min_price" class="form-control"
-                                       placeholder="Min Price (Rs)">
-                            </div>
-                            <div class="col">
-                                <input type="number" name="max_price" class="form-control"
-                                       placeholder="Max Price (Rs)">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-search">
-                            <i class="bi bi-search"></i> Search Vehicles
-                        </button>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
 </section>
-
-<!-- STATS BAR -->
-<div class="stats-bar">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-md-3 stat-item">
-                <h3>500+</h3><p>Vehicles Listed</p>
-            </div>
-            <div class="col-md-3 stat-item">
-                <h3>2000+</h3><p>Happy Renters</p>
-            </div>
-            <div class="col-md-3 stat-item">
-                <h3>25+</h3><p>Cities Covered</p>
-            </div>
-            <div class="col-md-3 stat-item">
-                <h3>4.8★</h3><p>Average Rating</p>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- FEATURED VEHICLES -->
 <section class="py-5">
     <div class="container">
@@ -150,28 +93,28 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="step-card">
-                    <div class="step-icon">🔍</div>
+                    <div class="step-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
                     <h5>Search</h5>
                     <p class="text-muted">Browse available vehicles by type, location and price</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="step-card">
-                    <div class="step-icon">📅</div>
+                    <div class="step-icon"><i class="fa-solid fa-calendar"></i></div>
                     <h5>Book</h5>
                     <p class="text-muted">Select your rental dates and confirm your booking</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="step-card">
-                    <div class="step-icon">💳</div>
+                    <div class="step-icon"><img src="http://developer.esewa.com.np/assets/img/esewa_logo.png" alt="esewa" height="30px" width="70px"></div>
                     <h5>Pay via eSewa</h5>
                     <p class="text-muted">Secure and instant payment through eSewa</p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="step-card">
-                    <div class="step-icon">🚗</div>
+                    <div class="step-icon"><i class="fa-solid fa-car"></i></div>
                     <h5>Ride!</h5>
                     <p class="text-muted">Pick up your vehicle and enjoy the journey</p>
                 </div>

@@ -32,7 +32,7 @@
 
 <div class="container py-4">
   <div class="mb-4">
-    <h3 style="font-weight:800;">📋 My Bookings</h3>
+    <h3 style="font-weight:800;">My Bookings</h3>
     <p class="text-muted">{{ bookings.count }} booking{{ bookings.count|pluralize }} total</p>
   </div>
 
@@ -45,7 +45,7 @@
       {% if booking.vehicle.images.first %}
       <img src="{{ booking.vehicle.images.first.image.url }}" class="vehicle-img">
       {% else %}
-      <div class="vehicle-placeholder">🚗</div>
+      <div class="vehicle-placeholder"></div>
       {% endif %}
 
       <!-- Info -->
