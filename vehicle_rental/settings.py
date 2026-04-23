@@ -98,7 +98,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # ✅ eSewa config (was missing)
-ESEWA_MERCHANT_ID = 'EPAYTEST'
+ESEWA_MERCHANT_ID = 'EPAYTEST'  # sandbox merchant ID
+ESEWA_SECRET_KEY  = '8gBm/:&EnhH.1/q'  # sandbox secret key (same value for testing)
 ESEWA_SUCCESS_URL = 'http://localhost:8000/bookings/payment/success/'
 ESEWA_FAILURE_URL = 'http://localhost:8000/bookings/payment/failure/'
 

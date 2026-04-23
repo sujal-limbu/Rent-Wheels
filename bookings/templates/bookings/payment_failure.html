@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Failed - RentWheels</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background:#f8fafc; font-family:'Segoe UI',sans-serif; }
+    .fail-card {
+      max-width:500px; margin:5rem auto;
+      background:white; border-radius:20px;
+      padding:3rem; text-align:center;
+      box-shadow:0 10px 40px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+{% include 'partials/navbar.html' %}
+<div class="fail-card">
+  <div style="font-size:5rem;">❌</div>
+  <h2 class="fw-bold mt-3">Payment Failed</h2>
+  <p class="text-muted">Your payment was not completed. Your booking is still pending.</p>
+  <a href="/bookings/my/" class="btn btn-warning px-4 mt-2">Try Again</a>
+  <a href="/vehicles/" class="btn btn-outline-secondary px-4 mt-2 ms-2">Go Home</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
