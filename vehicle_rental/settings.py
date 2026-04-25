@@ -84,7 +84,7 @@ USE_TZ = True
 # ✅ Static & Media (were completely missing)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'   pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+STATIC_ROOT = BASE_DIR / 'staticfiles'   
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
