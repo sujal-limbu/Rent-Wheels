@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Incoming Bookings | RentWheels Nepal{% endblock %}
+
+{% block extra_css %}
+<style>
+    .owner-bookings-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        padding: 48px 0 32px;
+        margin-bottom: 40px;
+    }
+
+    .owner-bookings-hero h1 {
+        color: #fff;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .owner-bookings-hero p {
+        color: rgba(255,255,255,0.65);
+    }
+
+    .stats-row .stat-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px 24px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        border-left: 4px solid transparent;
+        transition: transform 0.2s;
+    }
+
+    .stats-row .stat-card:hover { transform: translateY(-3px); }
+    .stat-card.pending  { border-color: #f59e0b; }
+    .stat-card.confirmed{ border-color: #10b981; }
+    .stat-card.active   { border-color: #3b82f6; }
+    .stat-card.total    { border-color: #8b5cf6; }
+
+    .stat-card .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+
+    .booking-card {
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        border: 1px solid #f1f5f9;
+        overflow: hidden;
+        transition: box-shadow 0.2s, transform 0.2s;
+        margin-bottom: 20px;
+    }
+
+    .booking-card:hover {
+        box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+        transform: translateY(-2px);
+    }
+
+    .booking-card-header {
+        padding: 16px 20px;
+        background: #f8fafc;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .booking-card-body {
+        padding: 20px;
+    }
+
+    .vehicle-thumb {
+        width: 64px;
+        height: 64px;
+        border-radius: 10px;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    .vehicle-thumb-placeholder {
+        width: 64px;
+        height: 64px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .renter-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    .badge-status {
+        font-size: 0.75rem;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .badge-pending   { background: #fef3c7; color: #92400e; }
+    .badge-confirmed { background: #d1fae5; color: #065f46; }
+    .badge-active    { background: #dbeafe; color: #1e40af; }
+    .badge-cancelled { background: #fee2e2; color: #991b1b; }
+    .badge-completed { background: #f3f4f6; color: #374151; }
+
+    .info-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.875rem;
+        color: #4b5563;
+        margin-bottom: 6px;
+    }
+
+    .info-row i { color: #9ca3af; width: 16px; }
+
+    .price-badge {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff;
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        color: #9ca3af;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 16px;
+        opacity: 0.4;
+    }
+
+    .filter-bar {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        margin-bottom: 28px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .filter-btn {
+        padding: 6px 16px;
+        border-radius: 20px;
+        border: 2px solid #e5e7eb;
+        background: transparent;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #6b7280;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+        border-color: #667eea;
+        background: #667eea;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<div class="owner-bookings-hero">
+    <div class="container">
+        <h1><i class="bi bi-inbox-fill me-2"></i>Incoming Bookings</h1>
+        <p class="mb-0">Manage booking requests for your listed vehicles</p>
+    </div>
+</div>
+
+<div class="container pb-5">
+
+    <!-- Stats Row -->
+    <div class="row stats-row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card pending">
+                <div class="stat-number text-warning">
+                    {{ bookings|length }}
+                </div>
+                <div class="stat-label">Total Requests</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card confirmed">
+                <div class="stat-number text-success">
+                    {% with count=0 %}
+                    {% for b in bookings %}{% if b.status == 'confirmed' %}{% with count=count|add:1 %}{% endwith %}{% endif %}{% endfor %}
+                    {{ bookings|dictsort:"status"|length }}
+                    {% endwith %}
+                </div>
+                <div class="stat-label">Confirmed</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card active">
+                <div class="stat-number text-primary">
+                    {% for b in bookings %}{% if b.status == 'pending' %}{% endif %}{% endfor %}
+                    —
+                </div>
+                <div class="stat-label">Pending</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card total">
+                <div class="stat-number text-purple" style="color:#8b5cf6;">
+                    —
+                </div>
+                <div class="stat-label">Revenue (Rs)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <span style="font-size:0.85rem;font-weight:600;color:#374151;margin-right:4px;">Filter:</span>
+        <a href="?status=" class="filter-btn {% if not request.GET.status %}active{% endif %}">All</a>
+        <a href="?status=pending"   class="filter-btn {% if request.GET.status == 'pending' %}active{% endif %}">Pending</a>
+        <a href="?status=confirmed" class="filter-btn {% if request.GET.status == 'confirmed' %}active{% endif %}">Confirmed</a>
+        <a href="?status=active"    class="filter-btn {% if request.GET.status == 'active' %}active{% endif %}">Active</a>
+        <a href="?status=cancelled" class="filter-btn {% if request.GET.status == 'cancelled' %}active{% endif %}">Cancelled</a>
+        <a href="?status=completed" class="filter-btn {% if request.GET.status == 'completed' %}active{% endif %}">Completed</a>
+    </div>
+
+    <!-- Bookings List -->
+    {% if bookings %}
+        {% for booking in bookings %}
+        <div class="booking-card">
+            <div class="booking-card-header">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted" style="font-size:0.8rem;">Booking #{{ booking.pk }}</span>
+                    <span class="badge-status badge-{{ booking.status }}">{{ booking.get_status_display|default:booking.status }}</span>
+                </div>
+                <span class="text-muted" style="font-size:0.8rem;">
+                    <i class="bi bi-clock me-1"></i>{{ booking.created_at|date:"M d, Y · H:i" }}
+                </span>
+            </div>
+
+            <div class="booking-card-body">
+                <div class="d-flex gap-3 align-items-start flex-wrap">
+
+                    <!-- Vehicle Thumbnail -->
+                    {% if booking.vehicle.images.first %}
+                        <img src="{{ booking.vehicle.images.first.image.url }}" class="vehicle-thumb" alt="{{ booking.vehicle.title }}">
+                    {% else %}
+                        <div class="vehicle-thumb-placeholder">
+                            <i class="bi bi-car-front"></i>
+                        </div>
+                    {% endif %}
+
+                    <!-- Main Info -->
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1 fw-700" style="font-weight:700;">
+                            <a href="/vehicles/{{ booking.vehicle.pk }}/" class="text-decoration-none text-dark">
+                                {{ booking.vehicle.title }}
+                            </a>
+                        </h6>
+
+                        <div class="row g-2 mt-1">
+                            <div class="col-md-6">
+                                <!-- Renter Info -->
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <div class="renter-avatar">
+                                        {{ booking.renter.username|first|upper }}
+                                    </div>
+                                    <div>
+                                        <div style="font-size:0.85rem;font-weight:600;">{{ booking.renter.username }}</div>
+                                        <div style="font-size:0.75rem;color:#9ca3af;">{{ booking.renter.email }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-row">
+                                    <i class="bi bi-calendar-event"></i>
+                                    <span>{{ booking.start_date|date:"M d, Y" }} → {{ booking.end_date|date:"M d, Y" }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <i class="bi bi-clock"></i>
+                                    <span>
+                                        {% with days=booking.end_date|timeuntil:booking.start_date %}
+                                        Duration: {{ booking.start_date|timesince:booking.end_date }}
+                                        {% endwith %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="d-flex flex-column align-items-end gap-2">
+                        <span class="price-badge">Rs {{ booking.total_price }}</span>
+                        <div class="d-flex gap-2 flex-wrap justify-content-end">
+                            <a href="/bookings/detail/{{ booking.pk }}/" class="btn btn-sm btn-outline-primary rounded-pill">
+                                <i class="bi bi-eye me-1"></i>View
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <h4>No incoming bookings yet</h4>
+            <p>Once someone books one of your vehicles, it will appear here.</p>
+            <a href="/vehicles/add/" class="btn btn-primary mt-2 rounded-pill px-4">
+                <i class="bi bi-plus-circle me-2"></i>List a Vehicle
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

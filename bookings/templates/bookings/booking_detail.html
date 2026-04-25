@@ -1,204 +1,164 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Detail - RentWheels</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        body {
-            background: #f8fafc;
-            font-family: 'Segoe UI', sans-serif;
-        }
+{% block title %}Booking Detail - RentWheels{% endblock %}
 
-        .detail-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            margin-bottom: 1.5rem;
-        }
+{% block extra_css %}
+<style>
+  body { background: #f8fafc; }
+  .detail-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+  }
+  .status-badge {
+    font-size: 1rem;
+    padding: 8px 20px;
+    border-radius: 20px;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.95rem;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: #64748b; }
+  .info-value { font-weight: 600; color: #0f172a; }
+  .price-total {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .price-total .amount {
+    font-size: 2.5rem;
+    font-weight: 900;
+  }
+  .btn-esewa {
+    background: #60BB46;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    width: 100%;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-esewa:hover { opacity: 0.9; }
+  .esewa-logo { font-size: 1.3rem; margin-right: 8px; }
+</style>
+{% endblock %}
 
-        .status-badge {
-            font-size: 1rem;
-            padding: 8px 20px;
-            border-radius: 20px;
-        }
+{% block content %}
+<div class="container py-4" style="max-width:700px;">
+  <div class="mb-4">
+    <h3 style="font-weight:800;">Booking Details</h3>
+    <p class="text-muted">Booking #{{ booking.pk }}</p>
+  </div>
 
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.6rem 0;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 0.95rem;
-        }
+  <!-- Status -->
+  <div class="detail-card text-center">
+    {% if booking.status == 'pending' %}
+      <span class="badge bg-warning text-dark status-badge">⏳ Pending Payment</span>
+    {% elif booking.status == 'confirmed' %}
+      <span class="badge bg-success status-badge">✅ Confirmed</span>
+    {% elif booking.status == 'active' %}
+      <span class="badge bg-primary status-badge">🚗 Active</span>
+    {% elif booking.status == 'completed' %}
+      <span class="badge bg-secondary status-badge">Completed</span>
+    {% elif booking.status == 'cancelled' %}
+      <span class="badge bg-danger status-badge">❌ Cancelled</span>
+    {% endif %}
+  </div>
 
-        .info-row:last-child {
-            border-bottom: none;
-        }
+  <!-- Vehicle Info -->
+  <div class="detail-card">
+    <h5 class="fw-bold mb-3">🚗 Vehicle</h5>
+    <div class="info-row">
+      <span class="info-label">Vehicle</span>
+      <span class="info-value">{{ booking.vehicle.title }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Owner</span>
+      <span class="info-value">{{ booking.vehicle.owner.username }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Pickup Location</span>
+      <span class="info-value">{{ booking.vehicle.location }}</span>
+    </div>
+  </div>
 
-        .info-label {
-            color: #64748b;
-        }
+  <!-- Dates -->
+  <div class="detail-card">
+    <h5 class="fw-bold mb-3">📅 Rental Period</h5>
+    <div class="info-row">
+      <span class="info-label">Start Date</span>
+      <span class="info-value">{{ booking.start_date|date:"M d, Y" }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">End Date</span>
+      <span class="info-value">{{ booking.end_date|date:"M d, Y" }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Total Days</span>
+      <span class="info-value">{{ booking.total_days }} day{{ booking.total_days|pluralize }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Rate</span>
+      <span class="info-value">Rs {{ booking.vehicle.price_per_day }}/day</span>
+    </div>
+  </div>
 
-        .info-value {
-            font-weight: 600;
-            color: #0f172a;
-        }
-
-        .price-total {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .price-total .amount {
-            font-size: 2.5rem;
-            font-weight: 900;
-        }
-
-        .btn-esewa {
-            background: #60BB46;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 14px;
-            width: 100%;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .btn-esewa:hover {
-            opacity: 0.9;
-        }
-
-        .esewa-logo {
-            font-size: 1.3rem;
-            margin-right: 8px;
-        }
-    </style>
-</head>
-
-<body>
-    {% include 'partials/navbar.html' %}
-
-    <div class="container py-4" style="max-width:700px;">
-        <div class="mb-4">
-            <h3 style="font-weight:800;">Booking Details</h3>
-            <p class="text-muted">Booking #{{ booking.pk }}</p>
-        </div>
-
-        <!-- Status -->
-        <div class="detail-card text-center">
-            {% if booking.status == 'pending' %}
-            <span class="badge bg-warning text-dark status-badge">⏳ Pending Payment</span>
-            {% elif booking.status == 'confirmed' %}
-            <span class="badge bg-success status-badge">Confirmed</span>
-            {% elif booking.status == 'active' %}
-            <span class="badge bg-primary status-badge">Active</span>
-            {% elif booking.status == 'completed' %}
-            <span class="badge bg-secondary status-badge">Completed</span>
-            {% elif booking.status == 'cancelled' %}
-            <span class="badge bg-danger status-badge">Cancelled</span>
-            {% endif %}
-        </div>
-
-        <!-- Vehicle Info -->
-        <div class="detail-card">
-            <h5 class="fw-bold mb-3"> Vehicle</h5>
-            <div class="info-row">
-                <span class="info-label">Vehicle</span>
-                <span class="info-value">{{ booking.vehicle.title }}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Owner</span>
-                <span class="info-value">{{ booking.vehicle.owner.username }}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Pickup Location</span>
-                <span class="info-value">{{ booking.vehicle.location }}</span>
-            </div>
-        </div>
-
-        <!-- Dates -->
-        <div class="detail-card">
-            <h5 class="fw-bold mb-3">Rental Period</h5>
-            <div class="info-row">
-                <span class="info-label">Start Date</span>
-                <span class="info-value">{{ booking.start_date|date:"M d, Y" }}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">End Date</span>
-                <span class="info-value">{{ booking.end_date|date:"M d, Y" }}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Total Days</span>
-                <span class="info-value">{{ booking.total_days }} day{{ booking.total_days|pluralize }}</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Rate</span>
-                <span class="info-value">Rs {{ booking.vehicle.price_per_day }}/day</span>
-            </div>
-        </div>
-
-        <!-- Payment -->
-        <div class="detail-card">
-            <div class="price-total mb-3">
-                <div style="opacity:0.8; font-size:0.9rem;">Total Amount</div>
-                <div class="amount">Rs {{ booking.total_price }}</div>
-            </div>
-
-            {% if booking.status == 'pending' %}
-            <!-- eSewa Payment Form -->
-            <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
-                <input type="hidden" name="amount" value="{{ booking.total_price }}">
-                <input type="hidden" name="tax_amount" value="0">
-                <input type="hidden" name="total_amount" value="{{ booking.total_price }}">
-                <input type="hidden" name="transaction_uuid" value="{{ transaction_uuid }}">
-                <input type="hidden" name="product_code" value="{{ esewa_merchant_id }}">
-                <input type="hidden" name="product_service_charge" value="0">
-                <input type="hidden" name="product_delivery_charge" value="0">
-                <input type="hidden" name="success_url" value="{{ esewa_success_url }}">
-                <input type="hidden" name="failure_url" value="{{ esewa_failure_url }}">
-                <input type="hidden" name="signed_field_names" value="total_amount,transaction_uuid,product_code">
-                <input type="hidden" name="signature" value="{{ signature }}">
-                <button type="submit" class="btn-esewa">
-                    <span class="esewa-logo">💚</span> Pay with eSewa
-                </button>
-            </form>
-
-            <hr>
-            <!-- Cancel -->
-            <form method="POST" action="/bookings/cancel/{{ booking.pk }}/"
-                onsubmit="return confirm('Cancel this booking?')">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger w-100">
-                    Cancel Booking
-                </button>
-            </form>
-
-            {% elif booking.status == 'confirmed' %}
-            <div class="alert alert-success text-center">
-                ✅ Payment completed — Ref: {{ booking.payment.esewa_ref_id }}
-            </div>
-
-            {% elif booking.status == 'cancelled' %}
-            <div class="alert alert-danger text-center">❌ This booking was cancelled.</div>
-            {% endif %}
-        </div>
-
-        <a href="/bookings/my/" class="btn btn-outline-secondary">← Back to My Bookings</a>
+  <!-- Payment -->
+  <div class="detail-card">
+    <div class="price-total mb-3">
+      <div style="opacity:0.8; font-size:0.9rem;">Total Amount</div>
+      <div class="amount">Rs {{ booking.total_price }}</div>
     </div>
 
-    {% include 'partials/footer.html' %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    {% if booking.status == 'pending' %}
+    <!-- eSewa Payment Form -->
+    <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
+      <input type="hidden" name="amount"                   value="{{ booking.total_price }}">
+      <input type="hidden" name="tax_amount"               value="0">
+      <input type="hidden" name="total_amount"             value="{{ booking.total_price }}">
+      <input type="hidden" name="transaction_uuid"         value="{{ transaction_uuid }}">
+      <input type="hidden" name="product_code"             value="{{ esewa_merchant_id }}">
+      <input type="hidden" name="product_service_charge"   value="0">
+      <input type="hidden" name="product_delivery_charge"  value="0">
+      <input type="hidden" name="success_url"              value="{{ esewa_success_url }}">
+      <input type="hidden" name="failure_url"              value="{{ esewa_failure_url }}">
+      <input type="hidden" name="signed_field_names"       value="total_amount,transaction_uuid,product_code">
+      <input type="hidden" name="signature"                value="{{ signature }}">
+      <button type="submit" class="btn-esewa">
+        <span class="esewa-logo">💚</span> Pay with eSewa
+      </button>
+    </form>
 
-</html>
+    <hr>
+    <form method="POST" action="/bookings/cancel/{{ booking.pk }}/"
+          onsubmit="return confirm('Cancel this booking?')">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-danger w-100">Cancel Booking</button>
+    </form>
+
+    {% elif booking.status == 'confirmed' %}
+    <div class="alert alert-success text-center">
+      ✅ Payment completed — Ref: {{ booking.payment.esewa_ref_id }}
+    </div>
+
+    {% elif booking.status == 'cancelled' %}
+    <div class="alert alert-danger text-center">❌ This booking was cancelled.</div>
+    {% endif %}
+  </div>
+
+  <a href="/bookings/my/" class="btn btn-outline-secondary">← Back to My Bookings</a>
+</div>
+{% endblock %}

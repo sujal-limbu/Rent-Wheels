@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from datetime import date
 from .models import Vehicle, VehicleImage
+from bookings.models import Booking
 
 def home(request):
     featured_vehicles = Vehicle.objects.filter(is_available=True).order_by('-created_at')[:6]
@@ -45,18 +46,28 @@ def vehicle_list(request):
     return render(request, 'vehicles/vehicle_list.html', context)
 
 
-# ✅ Single, clean vehicle_detail — duplicate removed, today added as isoformat string
 def vehicle_detail(request, pk):
     vehicle = get_object_or_404(Vehicle, pk=pk)
     reviews = vehicle.reviews.all().order_by('-created_at')
+
     already_reviewed = False
+    can_review       = False
+
     if request.user.is_authenticated:
         already_reviewed = vehicle.reviews.filter(reviewer=request.user).exists()
+        has_completed    = Booking.objects.filter(
+            renter  = request.user,
+            vehicle = vehicle,
+            status  = 'completed'
+        ).exists()
+        can_review = has_completed and not already_reviewed
+
     context = {
-        'vehicle': vehicle,
-        'reviews': reviews,
+        'vehicle'         : vehicle,
+        'reviews'         : reviews,
         'already_reviewed': already_reviewed,
-        'today': date.today().isoformat(),  # ✅ Used as min="" in date inputs
+        'can_review'      : can_review,   
+        'today'           : date.today().isoformat(),
     }
     return render(request, 'vehicles/vehicle_detail.html', context)
 
