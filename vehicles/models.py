@@ -6,8 +6,6 @@ class Vehicle(models.Model):
         ('car', 'Car'),
         ('bike', 'Bike'),
         ('scooter', 'Scooter'),
-        ('van', 'Van'),
-        ('truck', 'Truck'),
     ]
     FUEL_TYPES = [
         ('petrol', 'Petrol'),
@@ -27,7 +25,7 @@ class Vehicle(models.Model):
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
     description   = models.TextField()
     location      = models.CharField(max_length=200)
-    latitude      = models.FloatField(default=27.7172)   # Default: Kathmandu
+    latitude      = models.FloatField(default=27.7172)  
     longitude     = models.FloatField(default=85.3240)
     is_available  = models.BooleanField(default=True)
     created_at    = models.DateTimeField(auto_now_add=True)

@@ -77,30 +77,30 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Kathmandu'   # ← set to Nepal time
+TIME_ZONE = 'Asia/Kathmandu'   
 USE_I18N = True
 USE_TZ = True
 
-# ✅ Static & Media (were completely missing)
+# Static & Media (were completely missing)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'   
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# ✅ Auth redirects (were missing)
+# Auth redirects 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# ✅ Crispy Forms (was missing)
+#  Crispy Forms 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-# ✅ Email backend for dev (was missing)
+#  Email backend for dev 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# ✅ eSewa config (was missing)
+# eSewa config 
 ESEWA_MERCHANT_ID = 'EPAYTEST'  # sandbox merchant ID
 ESEWA_SECRET_KEY  = '8gBm/:&EnhH.1/q'  # sandbox secret key (same value for testing)
 ESEWA_SUCCESS_URL = 'http://localhost:8000/bookings/payment/success/'
