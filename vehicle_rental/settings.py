@@ -125,7 +125,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
 
 SOCIALACCOUNT_AUTO_SIGNUP                    = True
 SOCIALACCOUNT_EMAIL_REQUIRED                 = False
@@ -151,6 +151,6 @@ SOCIALACCOUNT_PROVIDERS = {
 # ── Session fix for production OAuth ──────────────────────────────────────────
 SOCIALACCOUNT_STORE_TOKENS = True
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_AGE = 86400
