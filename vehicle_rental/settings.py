@@ -1,5 +1,8 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -16,11 +19,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     # Third party
     'crispy_forms',
     'crispy_bootstrap5',
     'widget_tweaks',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 
     # Our apps
     'accounts',
@@ -29,6 +37,8 @@ INSTALLED_APPS = [
     'reviews',
     'notifications',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -39,6 +49,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 ROOT_URLCONF = 'vehicle_rental.urls'
@@ -77,36 +93,55 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Kathmandu'   
+TIME_ZONE = 'Asia/Kathmandu'
 USE_I18N = True
 USE_TZ = True
 
-# Static & Media (were completely missing)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'   
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Auth redirects 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-#  Crispy Forms 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-#  Email backend for dev 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# eSewa config 
-ESEWA_MERCHANT_ID = 'EPAYTEST'  # sandbox merchant ID
-ESEWA_SECRET_KEY  = '8gBm/:&EnhH.1/q'  # sandbox secret key (same value for testing)
+ESEWA_MERCHANT_ID = 'EPAYTEST'
+ESEWA_SECRET_KEY  = '8gBm/:&EnhH.1/q'
 ESEWA_SUCCESS_URL = 'http://localhost:8000/bookings/payment/success/'
 ESEWA_FAILURE_URL = 'http://localhost:8000/bookings/payment/failure/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# ── Google OAuth ───────────────────────────────────────────────────────────────
+ACCOUNT_EMAIL_VERIFICATION        = 'none'
+ACCOUNT_EMAIL_REQUIRED            = False
+ACCOUNT_USERNAME_REQUIRED         = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 
+SOCIALACCOUNT_AUTO_SIGNUP         = True
+SOCIALACCOUNT_EMAIL_REQUIRED      = False
+SOCIALACCOUNT_LOGIN_ON_GET        = True   
+SOCIALACCOUNT_EMAIL_VERIFICATION  = 'none' 
+SOCIALACCOUNT_ADAPTER = 'accounts.adapter.NoSignupFormAdapter'
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+        'OAUTH_PKCE_ENABLED': True,
+        'FETCH_USERINFO': True,
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+            'secret':    os.getenv('GOOGLE_CLIENT_SECRET'),
+        },
+    },
+}

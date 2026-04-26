@@ -24,90 +24,53 @@
       color: rgba(243, 244, 246, 1);
       box-shadow: 0 25px 60px rgba(0,0,0,0.5);
     }
-    .title {
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-    .subtitle {
-      text-align: center;
-      font-size: 0.85rem;
-      color: rgba(156, 163, 175, 1);
-      margin-top: 4px;
-      margin-bottom: 0.5rem;
-    }
-    .input-group {
-      margin-top: 1rem;
-      font-size: 0.875rem;
-    }
-    .input-group label {
-      display: block;
-      color: rgba(156, 163, 175, 1);
-      margin-bottom: 4px;
-    }
+    .title { text-align: center; font-size: 1.5rem; font-weight: 700; }
+    .subtitle { text-align: center; font-size: 0.85rem; color: rgba(156, 163, 175, 1); margin-top: 4px; margin-bottom: 0.5rem; }
+    .input-group { margin-top: 1rem; font-size: 0.875rem; }
+    .input-group label { display: block; color: rgba(156, 163, 175, 1); margin-bottom: 4px; }
     .input-group input {
-      width: 100%;
-      border-radius: 0.375rem;
-      border: 1px solid rgba(55, 65, 81, 1);
-      outline: 0;
-      background-color: rgba(17, 24, 39, 1);
-      padding: 0.75rem 1rem;
-      color: rgba(243, 244, 246, 1);
-      transition: border-color 0.2s;
+      width: 100%; border-radius: 0.375rem; border: 1px solid rgba(55, 65, 81, 1);
+      outline: 0; background-color: rgba(17, 24, 39, 1); padding: 0.75rem 1rem;
+      color: rgba(243, 244, 246, 1); transition: border-color 0.2s;
     }
-    .input-group input:focus {
-      border-color: rgba(167, 139, 250, 1);
-    }
-    .row-inputs {
-      display: flex;
-      gap: 0.75rem;
-    }
+    .input-group input:focus { border-color: rgba(167, 139, 250, 1); }
+    .row-inputs { display: flex; gap: 0.75rem; }
     .row-inputs .input-group { flex: 1; }
     .sign {
-      display: block;
-      width: 100%;
-      background-color: rgba(167, 139, 250, 1);
-      padding: 0.75rem;
-      text-align: center;
-      color: rgba(17, 24, 39, 1);
-      border: none;
-      border-radius: 0.375rem;
-      font-weight: 600;
-      margin-top: 1.2rem;
-      cursor: pointer;
-      transition: opacity 0.2s;
-      font-size: 1rem;
+      display: block; width: 100%; background-color: rgba(167, 139, 250, 1);
+      padding: 0.75rem; text-align: center; color: rgba(17, 24, 39, 1);
+      border: none; border-radius: 0.375rem; font-weight: 600; margin-top: 1.2rem;
+      cursor: pointer; transition: opacity 0.2s; font-size: 1rem;
     }
     .sign:hover { opacity: 0.9; }
-    .signup {
-      text-align: center;
-      font-size: 0.78rem;
-      color: rgba(156, 163, 175, 1);
-      margin-top: 1rem;
+    .social-message { display: flex; align-items: center; padding-top: 1.2rem; }
+    .line { height: 1px; flex: 1; background-color: rgba(55, 65, 81, 1); }
+    .social-message .message {
+      padding: 0 0.75rem; font-size: 0.8rem;
+      color: rgba(156, 163, 175, 1); white-space: nowrap;
     }
-    .signup a {
-      color: rgba(167, 139, 250, 1);
-      text-decoration: none;
-      font-weight: 600;
+    .social-icons { display: flex; justify-content: center; gap: 12px; margin-top: 1rem; }
+    .social-form { margin: 0; padding: 0; }
+    .icon {
+      background: transparent; border: 1px solid rgba(55, 65, 81, 1);
+      border-radius: 6px; padding: 10px 20px; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+      color: rgba(243, 244, 246, 1); font-size: 0.82rem; font-weight: 500;
+      font-family: 'Segoe UI', sans-serif;
     }
+    .icon:hover { border-color: rgba(167, 139, 250, 1); background: rgba(167, 139, 250, 0.07); }
+    .icon svg { width: 18px; height: 18px; fill: white; display: block; flex-shrink: 0; }
+    .signup { text-align: center; font-size: 0.78rem; color: rgba(156, 163, 175, 1); margin-top: 1rem; }
+    .signup a { color: rgba(167, 139, 250, 1); text-decoration: none; font-weight: 600; }
     .signup a:hover { text-decoration: underline; }
     .error-msg {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #fca5a5;
-      border-radius: 6px;
-      padding: 8px 12px;
-      font-size: 0.82rem;
-      margin-top: 1rem;
+      background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5; border-radius: 6px; padding: 8px 12px; font-size: 0.82rem; margin-top: 1rem;
     }
     .success-msg {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: #6ee7b7;
-      border-radius: 6px;
-      padding: 8px 12px;
-      font-size: 0.82rem;
-      margin-top: 1rem;
+      background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7; border-radius: 6px; padding: 8px 12px; font-size: 0.82rem; margin-top: 1rem;
     }
   </style>
 </head>
@@ -126,22 +89,18 @@
 
     <form method="POST">
       {% csrf_token %}
-
       <div class="input-group">
         <label for="username">Username</label>
         <input type="text" name="username" id="username" placeholder="Choose a username" required>
       </div>
-
       <div class="input-group">
         <label for="email">Email</label>
         <input type="email" name="email" id="email" placeholder="your@email.com" required>
       </div>
-
       <div class="input-group">
         <label for="phone">Phone Number</label>
         <input type="text" name="phone" id="phone" placeholder="+977-98XXXXXXXX">
       </div>
-
       <div class="row-inputs">
         <div class="input-group">
           <label for="password1">Password</label>
@@ -152,9 +111,31 @@
           <input type="password" name="password2" id="password2" placeholder="Repeat it" required>
         </div>
       </div>
-
       <button type="submit" class="sign">Create Account</button>
     </form>
+
+    <div class="social-message">
+      <div class="line"></div>
+      <p class="message">or sign up with</p>
+      <div class="line"></div>
+    </div>
+
+    <div class="social-icons">
+      <form class="social-form" method="POST" action="{% url 'google_login' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="/">
+        <button type="submit" class="icon" aria-label="Sign up with Google">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+            <path d="M16.318 13.714v5.484h9.078c-0.37 2.354-2.745 6.901-9.078
+              6.901-5.458 0-9.917-4.521-9.917-10.099s4.458-10.099
+              9.917-10.099c3.109 0 5.193 1.318 6.38 2.464l4.339-4.182c-2.786-2.599-6.396-4.182-10.719-4.182-8.844
+              0-16 7.151-16 16s7.156 16 16 16c9.234 0 15.365-6.49
+              15.365-15.635 0-1.052-0.115-1.854-0.255-2.651z"/>
+          </svg>
+          Sign up with Google
+        </button>
+      </form>
+    </div>
 
     <p class="signup">Already have an account? <a href="/accounts/login/">Sign in</a></p>
   </div>

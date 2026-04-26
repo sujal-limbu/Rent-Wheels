@@ -13,7 +13,6 @@ from notifications.utils import send_notification
 def create_booking(request, vehicle_pk):
     vehicle = get_object_or_404(Vehicle, pk=vehicle_pk, is_available=True)
 
-    # ✅ Fix 1 — Owner cannot book their own vehicle
     if vehicle.owner == request.user:
         messages.error(request, 'You cannot book your own vehicle!')
         return redirect('vehicle_detail', pk=vehicle_pk)
@@ -26,7 +25,6 @@ def create_booking(request, vehicle_pk):
         start = datetime.strptime(start_date, '%Y-%m-%d').date()
         end   = datetime.strptime(end_date,   '%Y-%m-%d').date()
 
-        # Validations
         if start >= end:
             messages.error(request, 'End date must be after start date!')
             return redirect('vehicle_detail', pk=vehicle_pk)
@@ -35,7 +33,6 @@ def create_booking(request, vehicle_pk):
             messages.error(request, 'Start date cannot be in the past!')
             return redirect('vehicle_detail', pk=vehicle_pk)
 
-        # Check overlapping bookings
         overlapping = Booking.objects.filter(
             vehicle=vehicle,
             status__in=['confirmed', 'active'],
@@ -47,7 +44,6 @@ def create_booking(request, vehicle_pk):
             messages.error(request, 'Vehicle is already booked for those dates!')
             return redirect('vehicle_detail', pk=vehicle_pk)
 
-        # Create booking
         booking = Booking.objects.create(
             renter     = request.user,
             vehicle    = vehicle,
@@ -55,25 +51,22 @@ def create_booking(request, vehicle_pk):
             end_date   = end,
         )
 
-        # Create pending payment
         Payment.objects.create(
             booking = booking,
             amount  = booking.total_price,
         )
 
-        # Notify renter
         send_notification(
-            user    = request.user,
-            title   = 'Booking Created!',
-            message = f'Your booking for {vehicle.title} from {start} to {end} is pending payment.',
+            user       = request.user,
+            title      = 'Booking Created!',
+            message    = f'Your booking for {vehicle.brand} {vehicle.model} from {start} to {end} is pending payment.',
             notif_type = 'booking',
         )
 
-        # Notify owner
         send_notification(
-            user    = vehicle.owner,
-            title   = 'New Booking Request!',
-            message = f'{request.user.username} booked your {vehicle.title} from {start} to {end}.',
+            user       = vehicle.owner,
+            title      = 'New Booking Request!',
+            message    = f'{request.user.username} booked your {vehicle.brand} {vehicle.model} from {start} to {end}.',
             notif_type = 'booking',
         )
 
@@ -121,7 +114,7 @@ def cancel_booking(request, pk):
             send_notification(
                 user       = request.user,
                 title      = 'Booking Cancelled',
-                message    = f'Your booking for {booking.vehicle.title} has been cancelled.',
+                message    = f'Your booking for {booking.vehicle.brand} {booking.vehicle.model} has been cancelled.',
                 notif_type = 'booking',
             )
             messages.success(request, 'Booking cancelled successfully.')
@@ -152,7 +145,6 @@ def payment_success(request):
         return redirect('my_bookings')
 
     try:
-        # Decode the Base64 response from eSewa
         decoded     = base64.b64decode(data).decode('utf-8')
         esewa_data  = json.loads(decoded)
 
@@ -165,7 +157,6 @@ def payment_success(request):
             messages.error(request, 'Payment was not completed.')
             return redirect('my_bookings')
 
-        # Find booking by transaction_uuid (we set it as booking.pk earlier)
         booking_pk = esewa_data.get('transaction_uuid', '').split('-')[0]
         booking    = Booking.objects.get(pk=booking_pk)
         payment    = booking.payment
@@ -184,14 +175,14 @@ def payment_success(request):
 
         send_notification(
             user       = booking.renter,
-            title      = '✅ Payment Successful!',
-            message    = f'Payment of Rs {total_amount} confirmed for {booking.vehicle.title}.',
+            title      = 'Payment Successful!',
+            message    = f'Payment of Rs {total_amount} confirmed for {booking.vehicle.brand} {booking.vehicle.model}.',
             notif_type = 'payment',
         )
         send_notification(
             user       = booking.vehicle.owner,
-            title      = '💰 Payment Received!',
-            message    = f'Payment received for {booking.vehicle.title} from {request.user.username}.',
+            title      = 'Payment Received!',
+            message    = f'Payment received for {booking.vehicle.brand} {booking.vehicle.model} from {request.user.username}.',
             notif_type = 'payment',
         )
 
@@ -211,7 +202,6 @@ def payment_failure(request):
     return render(request, 'bookings/payment_failure.html')
 
 
-# ✅ Fix 4 — Owner dashboard: see all incoming bookings on their vehicles
 @login_required
 def owner_bookings(request):
     my_vehicles = Vehicle.objects.filter(owner=request.user)

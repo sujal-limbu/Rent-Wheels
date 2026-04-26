@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block title %}Booking Detail - RentWheels{% endblock %}
 
 {% block extra_css %}
@@ -66,21 +65,21 @@
   <!-- Status -->
   <div class="detail-card text-center">
     {% if booking.status == 'pending' %}
-      <span class="badge bg-warning text-dark status-badge">⏳ Pending Payment</span>
+      <span class="badge bg-warning text-dark status-badge">Pending Payment</span>
     {% elif booking.status == 'confirmed' %}
-      <span class="badge bg-success status-badge">✅ Confirmed</span>
+      <span class="badge bg-success status-badge">Confirmed</span>
     {% elif booking.status == 'active' %}
-      <span class="badge bg-primary status-badge">🚗 Active</span>
+      <span class="badge bg-primary status-badge">Active</span>
     {% elif booking.status == 'completed' %}
       <span class="badge bg-secondary status-badge">Completed</span>
     {% elif booking.status == 'cancelled' %}
-      <span class="badge bg-danger status-badge">❌ Cancelled</span>
+      <span class="badge bg-danger status-badge">Cancelled</span>
     {% endif %}
   </div>
 
   <!-- Vehicle Info -->
   <div class="detail-card">
-    <h5 class="fw-bold mb-3">🚗 Vehicle</h5>
+    <h5 class="fw-bold mb-3">Vehicle</h5>
     <div class="info-row">
       <span class="info-label">Vehicle</span>
       <span class="info-value">{{ booking.vehicle.title }}</span>
@@ -97,7 +96,7 @@
 
   <!-- Dates -->
   <div class="detail-card">
-    <h5 class="fw-bold mb-3">📅 Rental Period</h5>
+    <h5 class="fw-bold mb-3">Rental Period</h5>
     <div class="info-row">
       <span class="info-label">Start Date</span>
       <span class="info-value">{{ booking.start_date|date:"M d, Y" }}</span>
@@ -138,7 +137,7 @@
       <input type="hidden" name="signed_field_names"       value="total_amount,transaction_uuid,product_code">
       <input type="hidden" name="signature"                value="{{ signature }}">
       <button type="submit" class="btn-esewa">
-        <span class="esewa-logo">💚</span> Pay with eSewa
+        <span class="esewa-logo">Pay via <img src="http://developer.esewa.com.np/assets/img/esewa_logo.png" height="30" width="80" alt="logo"></span> 
       </button>
     </form>
 
@@ -151,11 +150,11 @@
 
     {% elif booking.status == 'confirmed' %}
     <div class="alert alert-success text-center">
-      ✅ Payment completed — Ref: {{ booking.payment.esewa_ref_id }}
+      Payment completed — Ref: {{ booking.payment.esewa_ref_id }}
     </div>
 
     {% elif booking.status == 'cancelled' %}
-    <div class="alert alert-danger text-center">❌ This booking was cancelled.</div>
+    <div class="alert alert-danger text-center">This booking was cancelled.</div>
     {% endif %}
   </div>
 
