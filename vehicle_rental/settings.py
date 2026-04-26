@@ -150,7 +150,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 # ── Session fix for production OAuth ──────────────────────────────────────────
 SOCIALACCOUNT_STORE_TOKENS = True
-SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_AGE = 86400
