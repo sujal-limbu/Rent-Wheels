@@ -120,18 +120,18 @@ ESEWA_FAILURE_URL = 'http://localhost:8000/bookings/payment/failure/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ── Google OAuth ───────────────────────────────────────────────────────────────
-ACCOUNT_EMAIL_VERIFICATION        = 'none'
-ACCOUNT_EMAIL_REQUIRED            = False
-ACCOUNT_USERNAME_REQUIRED         = False
-ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_LOGIN_METHODS = {'google', 'username', 'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
-SOCIALACCOUNT_AUTO_SIGNUP         = True
-SOCIALACCOUNT_EMAIL_REQUIRED      = False
-SOCIALACCOUNT_LOGIN_ON_GET        = True   
-SOCIALACCOUNT_EMAIL_VERIFICATION  = 'none' 
-SOCIALACCOUNT_ADAPTER = 'accounts.adapter.NoSignupFormAdapter'
-SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_AUTO_SIGNUP                    = True
+SOCIALACCOUNT_EMAIL_REQUIRED                 = False
+SOCIALACCOUNT_LOGIN_ON_GET                   = True
+SOCIALACCOUNT_EMAIL_VERIFICATION             = 'none'
+SOCIALACCOUNT_EMAIL_AUTHENTICATION          = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_ADAPTER                        = 'accounts.adapter.NoSignupFormAdapter'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
