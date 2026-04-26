@@ -8,7 +8,7 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-75cor+017x2ht(y&1b2hoc&v01wl3qe47d*e2+=wyi2$ybbtji'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = True
 
@@ -114,8 +114,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-ESEWA_MERCHANT_ID = 'EPAYTEST'
-ESEWA_SECRET_KEY  = '8gBm/:&EnhH.1/q'
+ESEWA_MERCHANT_ID = os.getenv('ESEWA_MERCHANT_ID')
+ESEWA_SECRET_KEY  = os.getenv('ESEWA_SECRET_KEY')
 ESEWA_SUCCESS_URL = 'http://localhost:8000/bookings/payment/success/'
 ESEWA_FAILURE_URL = 'http://localhost:8000/bookings/payment/failure/'
 
@@ -148,7 +148,7 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
-# ── Session fix for production OAuth ──────────────────────────────────────────
+# ── Session fix for local development ─────────────────────────────────────────
 SOCIALACCOUNT_STORE_TOKENS = True
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_SECURE = False

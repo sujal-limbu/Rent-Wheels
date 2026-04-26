@@ -1,6 +1,28 @@
+# Environment variables - NEVER commit this
 .env
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Django
+*.log
 db.sqlite3
-staticfiles/
-media/
+/staticfiles/
+/media/
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
