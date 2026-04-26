@@ -116,8 +116,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ESEWA_MERCHANT_ID = os.getenv('ESEWA_MERCHANT_ID')
 ESEWA_SECRET_KEY  = os.getenv('ESEWA_SECRET_KEY')
-ESEWA_SUCCESS_URL = 'http://localhost:8000/bookings/payment/success/'
-ESEWA_FAILURE_URL = 'http://localhost:8000/bookings/payment/failure/'
+ESEWA_SUCCESS_URL = 'http://127.0.0.1:8000/bookings/payment/success/'
+ESEWA_FAILURE_URL = 'http://127.0.0.1:8000/bookings/payment/failure/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

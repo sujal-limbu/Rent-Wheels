@@ -4,9 +4,23 @@ from django.contrib import messages
 from django.conf import settings
 from datetime import date
 import uuid
+import json
+import base64
+import hmac
+import hashlib
 from .models import Booking, Payment
 from vehicles.models import Vehicle
 from notifications.utils import send_notification
+
+
+def generate_esewa_signature(secret_key, total_amount, transaction_uuid, product_code):
+    message = f"total_amount={total_amount},transaction_uuid={transaction_uuid},product_code={product_code}"
+    signature = hmac.new(
+        secret_key.encode('utf-8'),
+        message.encode('utf-8'),
+        hashlib.sha256
+    ).digest()
+    return base64.b64encode(signature).decode('utf-8')
 
 
 @login_required
@@ -59,7 +73,7 @@ def create_booking(request, vehicle_pk):
         send_notification(
             user       = request.user,
             title      = 'Booking Created!',
-            message    = f'Your booking for {vehicle.brand} {vehicle.model} from {start} to {end} is pending payment.',
+            message    = f'Your booking for {vehicle.brand} {vehicle.model} from {start} to {end} and payment is pending.',
             notif_type = 'booking',
         )
 
@@ -127,15 +141,12 @@ def cancel_booking(request, pk):
 def initiate_payment(request, booking_pk):
     booking = get_object_or_404(Booking, pk=booking_pk, renter=request.user)
     return render(request, 'bookings/esewa_payment.html', {
-        'booking': booking,
+        'booking'          : booking,
         'esewa_merchant_id': settings.ESEWA_MERCHANT_ID,
         'esewa_success_url': settings.ESEWA_SUCCESS_URL,
         'esewa_failure_url': settings.ESEWA_FAILURE_URL,
     })
 
-
-import json
-import base64
 
 def payment_success(request):
     data = request.GET.get('data')
@@ -145,8 +156,8 @@ def payment_success(request):
         return redirect('my_bookings')
 
     try:
-        decoded     = base64.b64decode(data).decode('utf-8')
-        esewa_data  = json.loads(decoded)
+        decoded    = base64.b64decode(data).decode('utf-8')
+        esewa_data = json.loads(decoded)
 
         status       = esewa_data.get('status')
         total_amount = esewa_data.get('total_amount')
@@ -157,9 +168,14 @@ def payment_success(request):
             messages.error(request, 'Payment was not completed.')
             return redirect('my_bookings')
 
-        booking_pk = esewa_data.get('transaction_uuid', '').split('-')[0]
+        booking_pk = ref_id.split('-')[0]
         booking    = Booking.objects.get(pk=booking_pk)
         payment    = booking.payment
+
+        # Prevent double processing
+        if payment.status == 'success':
+            messages.info(request, 'Payment already processed.')
+            return redirect('my_bookings')
 
         payment.status       = 'success'
         payment.esewa_ref_id = ref_id
@@ -182,17 +198,21 @@ def payment_success(request):
         send_notification(
             user       = booking.vehicle.owner,
             title      = 'Payment Received!',
-            message    = f'Payment received for {booking.vehicle.brand} {booking.vehicle.model} from {request.user.username}.',
+            message    = f'Payment received for {booking.vehicle.brand} {booking.vehicle.model} from {booking.renter.username}.',
             notif_type = 'payment',
         )
 
         messages.success(request, 'Payment successful!')
         return render(request, 'bookings/payment_success.html', {
-            'ref_id': ref_id,
-            'amt'   : total_amount,
+            'booking': booking,
+            'ref_id' : ref_id,
+            'amt'    : total_amount,
         })
 
-    except (Booking.DoesNotExist, Exception) as e:
+    except Booking.DoesNotExist:
+        messages.error(request, 'Booking not found.')
+        return redirect('my_bookings')
+    except Exception as e:
         messages.error(request, f'Payment verification failed: {str(e)}')
         return redirect('my_bookings')
 
@@ -205,20 +225,5 @@ def payment_failure(request):
 @login_required
 def owner_bookings(request):
     my_vehicles = Vehicle.objects.filter(owner=request.user)
-    bookings = Booking.objects.filter(
-        vehicle__in=my_vehicles
-    ).order_by('-created_at')
+    bookings    = Booking.objects.filter(vehicle__in=my_vehicles).order_by('-created_at')
     return render(request, 'bookings/owner_bookings.html', {'bookings': bookings})
-
-import hmac
-import hashlib
-import base64
-
-def generate_esewa_signature(secret_key, total_amount, transaction_uuid, product_code):
-    message = f"total_amount={total_amount},transaction_uuid={transaction_uuid},product_code={product_code}"
-    signature = hmac.new(
-        secret_key.encode('utf-8'),
-        message.encode('utf-8'),
-        hashlib.sha256
-    ).digest()
-    return base64.b64encode(signature).decode('utf-8')
