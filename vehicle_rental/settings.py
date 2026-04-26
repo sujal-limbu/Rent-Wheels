@@ -120,7 +120,7 @@ ESEWA_FAILURE_URL = 'http://localhost:8000/bookings/payment/failure/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ── Google OAuth ───────────────────────────────────────────────────────────────
-ACCOUNT_LOGIN_METHODS = {'google', 'username', 'email'}
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
