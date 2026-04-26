@@ -145,3 +145,8 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     },
 }
+
+# ── Session fix for production OAuth ──────────────────────────────────────────
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'None'
