@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
+from django.utils import timezone
 from datetime import date
 import uuid
 import json
@@ -21,6 +22,20 @@ def generate_esewa_signature(secret_key, total_amount, transaction_uuid, product
         hashlib.sha256
     ).digest()
     return base64.b64encode(signature).decode('utf-8')
+
+
+def complete_expired_bookings(renter):
+    """Auto-complete confirmed bookings whose end_date has passed."""
+    expired = Booking.objects.filter(
+        renter   = renter,
+        status   = 'confirmed',
+        end_date__lt = timezone.now().date(),
+    )
+    for booking in expired:
+        booking.status = 'completed'
+        booking.save()
+        booking.vehicle.is_available = True
+        booking.vehicle.save()
 
 
 @login_required
@@ -76,7 +91,6 @@ def create_booking(request, vehicle_pk):
             message    = f'Your booking for {vehicle.brand} {vehicle.model} from {start} to {end} and payment is pending.',
             notif_type = 'booking',
         )
-
         send_notification(
             user       = vehicle.owner,
             title      = 'New Booking Request!',
@@ -92,6 +106,9 @@ def create_booking(request, vehicle_pk):
 
 @login_required
 def my_bookings(request):
+    # ✅ Auto-complete expired bookings before listing
+    complete_expired_bookings(request.user)
+
     bookings = Booking.objects.filter(renter=request.user).order_by('-created_at')
     return render(request, 'bookings/my_bookings.html', {'bookings': bookings})
 
@@ -179,8 +196,7 @@ def payment_success(request):
 
         payment.status       = 'success'
         payment.esewa_ref_id = ref_id
-        from django.utils import timezone
-        payment.paid_at = timezone.now()
+        payment.paid_at      = timezone.now()
         payment.save()
 
         booking.status = 'confirmed'
