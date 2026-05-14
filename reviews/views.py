@@ -13,7 +13,7 @@ def add_review(request, vehicle_pk):
     if request.method != 'POST':
         return redirect('vehicle_detail', pk=vehicle_pk)
 
-    # ✅ Only allow review if user has a completed booking for this vehicle
+   
     has_completed_booking = Booking.objects.filter(
         renter=request.user,
         vehicle=vehicle,
@@ -24,7 +24,7 @@ def add_review(request, vehicle_pk):
         messages.error(request, 'You can only review vehicles you have rented.')
         return redirect('vehicle_detail', pk=vehicle_pk)
 
-    # ✅ One review per person per vehicle
+    
     if Review.objects.filter(vehicle=vehicle, reviewer=request.user).exists():
         messages.error(request, 'You have already reviewed this vehicle.')
         return redirect('vehicle_detail', pk=vehicle_pk)

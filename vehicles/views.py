@@ -25,7 +25,12 @@ def vehicle_list(request):
     if vehicle_type:
         vehicles = vehicles.filter(vehicle_type=vehicle_type)
     if location:
-        vehicles = vehicles.filter(location__icontains=location)
+        from django.db.models import Q
+        words = location.strip().split()
+        query = Q()
+        for word in words:
+            query |= Q(location__icontains=word)  
+        vehicles = vehicles.filter(query)
     if min_price:
         vehicles = vehicles.filter(price_per_day__gte=min_price)
     if max_price:
@@ -33,7 +38,10 @@ def vehicle_list(request):
     if fuel_type:
         vehicles = vehicles.filter(fuel_type=fuel_type)
     if seats:
-        vehicles = vehicles.filter(seats=seats)
+        if seats == '8':                                  
+            vehicles = vehicles.filter(seats__gte=8)
+        else:
+            vehicles = vehicles.filter(seats=int(seats))
 
     context = {
         'vehicles'    : vehicles,
