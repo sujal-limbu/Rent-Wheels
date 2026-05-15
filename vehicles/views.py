@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.utils import timezone
 from datetime import date
 from .models import Vehicle, VehicleImage
@@ -29,7 +30,7 @@ def vehicle_list(request):
         words = location.strip().split()
         query = Q()
         for word in words:
-            query |= Q(location__icontains=word)  
+            query |= Q(location__icontains=word)
         vehicles = vehicles.filter(query)
     if min_price:
         vehicles = vehicles.filter(price_per_day__gte=min_price)
@@ -38,20 +39,25 @@ def vehicle_list(request):
     if fuel_type:
         vehicles = vehicles.filter(fuel_type=fuel_type)
     if seats:
-        if seats == '8':                                  
+        if seats == '8':
             vehicles = vehicles.filter(seats__gte=8)
         else:
             vehicles = vehicles.filter(seats=int(seats))
 
+    total     = vehicles.count()
+    paginator = Paginator(vehicles, 2)          
+    page_obj  = paginator.get_page(request.GET.get('page'))
+
     context = {
-        'vehicles'    : vehicles,
+        'vehicles'    : page_obj,
+        'page_obj'    : page_obj,
         'vehicle_type': vehicle_type,
         'location'    : location,
         'min_price'   : min_price,
         'max_price'   : max_price,
         'fuel_type'   : fuel_type,
         'seats'       : seats,
-        'total'       : vehicles.count(),
+        'total'       : total,
     }
     return render(request, 'vehicles/vehicle_list.html', context)
 
@@ -64,7 +70,6 @@ def vehicle_detail(request, pk):
     can_review       = False
 
     if request.user.is_authenticated:
-        # ✅ Auto-complete expired bookings so review form unlocks immediately
         Booking.objects.filter(
             renter   = request.user,
             vehicle  = vehicle,

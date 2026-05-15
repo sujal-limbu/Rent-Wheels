@@ -137,6 +137,30 @@
     font-size: 0.8rem;
     font-weight: 600;
   }
+
+  /* Pagination */
+  .pagination .page-link {
+    border-radius: 8px;
+    margin: 0 3px;
+    border: 2px solid #e2e8f0;
+    color: #2563eb;
+    font-weight: 600;
+    padding: 6px 14px;
+  }
+  .pagination .page-item.active .page-link {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: white;
+  }
+  .pagination .page-item.disabled .page-link {
+    color: #94a3b8;
+    border-color: #e2e8f0;
+  }
+  .pagination .page-link:hover:not(.disabled) {
+    background: #dbeafe;
+    border-color: #2563eb;
+    color: #1d4ed8;
+  }
 </style>
 {% endblock %}
 
@@ -222,9 +246,12 @@
       <!-- Results header -->
       <div class="results-header">
         <h4>{{ total }} Vehicle{{ total|pluralize }} Found</h4>
+        {% if page_obj.paginator.num_pages > 1 %}
+        <span class="text-muted" style="font-size:0.9rem;">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+        {% endif %}
       </div>
-
-      
 
       {% if vehicles %}
       <div class="row g-4">
@@ -277,6 +304,50 @@
         </div>
         {% endfor %}
       </div>
+
+      <!-- PAGINATION -->
+      {% if page_obj.has_other_pages %}
+      <nav class="mt-5 d-flex justify-content-center">
+        <ul class="pagination">
+
+          <!-- Previous -->
+          {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&type={{ vehicle_type|default:'' }}&location={{ location|default:'' }}&fuel={{ fuel_type|default:'' }}&seats={{ seats|default:'' }}&min_price={{ min_price|default:'' }}&max_price={{ max_price|default:'' }}">
+              &laquo; Prev
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item disabled"><span class="page-link">&laquo; Prev</span></li>
+          {% endif %}
+
+          <!-- Page numbers (±2 window around current page) -->
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ num }}&type={{ vehicle_type|default:'' }}&location={{ location|default:'' }}&fuel={{ fuel_type|default:'' }}&seats={{ seats|default:'' }}&min_price={{ min_price|default:'' }}&max_price={{ max_price|default:'' }}">
+                  {{ num }}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          <!-- Next -->
+          {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}&type={{ vehicle_type|default:'' }}&location={{ location|default:'' }}&fuel={{ fuel_type|default:'' }}&seats={{ seats|default:'' }}&min_price={{ min_price|default:'' }}&max_price={{ max_price|default:'' }}">
+              Next &raquo;
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item disabled"><span class="page-link">Next &raquo;</span></li>
+          {% endif %}
+
+        </ul>
+      </nav>
+      {% endif %}
 
       {% else %}
       <div class="no-results">
