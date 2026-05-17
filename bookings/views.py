@@ -106,7 +106,6 @@ def create_booking(request, vehicle_pk):
 
 @login_required
 def my_bookings(request):
-    # ✅ Auto-complete expired bookings before listing
     complete_expired_bookings(request.user)
 
     bookings = Booking.objects.filter(renter=request.user).order_by('-created_at')

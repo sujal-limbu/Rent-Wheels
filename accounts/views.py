@@ -32,7 +32,7 @@ def register_view(request):
 
         # 2. Username format
         if username and not re.match(r'^[\w]{3,30}$', username):
-            messages.error(request, 'Username must be 3–30 characters (letters, numbers, underscores only).')
+            messages.error(request, 'Username must be 3-30 characters (letters, numbers, underscores only).')
             has_error = True
 
         # 3. Email format
@@ -72,7 +72,7 @@ def register_view(request):
             messages.error(request, 'Email already registered.')
             has_error = True
 
-        # ✅ render (NOT redirect) so all messages are preserved
+        #  render (NOT redirect) so all messages are preserved
         if has_error:
             return render(request, 'accounts/register.html')
 
