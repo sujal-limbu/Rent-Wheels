@@ -45,7 +45,7 @@ def vehicle_list(request):
             vehicles = vehicles.filter(seats=int(seats))
 
     total     = vehicles.count()
-    paginator = Paginator(vehicles, 2)          
+    paginator = Paginator(vehicles, 3)          
     page_obj  = paginator.get_page(request.GET.get('page'))
 
     context = {
